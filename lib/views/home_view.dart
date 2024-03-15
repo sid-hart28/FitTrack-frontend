@@ -1,12 +1,21 @@
 import 'package:dotted_dashed_line/dotted_dashed_line.dart';
+import 'package:fit_track/models/user_profile_model.dart';
+import 'package:fit_track/services/steps_detection_service.dart';
+import 'package:fit_track/services/steps_detection_service.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_animation_progress_bar/simple_animation_progress_bar.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
+import 'dart:async';
+import 'package:pedometer/pedometer.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../utils/colors.dart';
 import '../../utils/widgets/round_button.dart';
 import '../../utils/widgets/workout_row.dart';
+import 'activity_tracker_view.dart';
 import 'finished_workout_view.dart';
 import 'notification_view.dart';
 
@@ -18,18 +27,75 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  String userName = "";
+  late Stream<StepCount> _stepCountStream;
+  late Stream<PedestrianStatus> _pedestrianStatusStream;
+  String _status ='?', _steps = '0';
+  //String _Flag = "BITSCTF{correct_flag}";
+
+  double miles = 0;
+
+  double duration = 30.0;
+  double calories = 40.0;
+  double addValue = 0.025;
+  double percent = 0.5;
+  double target = 1000000;
+  int steps = 20;
+  double previousDistacne = 0.0;
+  double distance = 0.0;
 
   @override
   void initState() {
     super.initState();
-    fetchUserName();
+    initPlatformState();
   }
 
-  void fetchUserName() async {
-      setState(() {
-        userName = 'siddharth';
-      });
+  String formatDate(DateTime d) {
+    return d.toString().substring(0, 19);
+  }
+
+  void onStepCount(StepCount event) {
+    print("inStepsCount");
+    setState(() {
+      _steps = event.steps.toString();
+      print(_steps);
+    });
+  }
+
+  void onPedestrianStatusChanged(PedestrianStatus event) {
+    print("inStatus");
+    setState(() {
+      _status = event.status;
+    });
+  }
+
+  void onPedestrianStatusError(error) {
+    // print('onPedestrianStatusError: $error');
+    setState(() {
+      _status = 'Pedestrian Status not available';
+    });
+    // print(_status);
+  }
+
+  void onStepCountError(error) {
+    // print('onStepCountError: $error');
+    setState(() {
+      _steps = '69';
+    });
+  }
+
+  Future<void> initPlatformState() async {
+    if (await Permission.activityRecognition.request().isGranted) {
+      _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
+      _pedestrianStatusStream
+          .listen(onPedestrianStatusChanged)
+          .onError(onPedestrianStatusError);
+
+      _stepCountStream = Pedometer.stepCountStream;
+      _stepCountStream.listen(onStepCount).onError(onStepCountError);
+    }else{
+
+    }
+    if (!mounted) return;
   }
 
   List lastWorkoutArr = [
@@ -102,6 +168,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final userProfile = ModalRoute.of(context)!.settings.arguments as UserProfile;
     var media = MediaQuery.of(context).size;
 
     final lineBarsData = [
@@ -117,7 +184,7 @@ class _HomeViewState extends State<HomeView> {
             TColor.primaryColor1.withOpacity(0.1),
           ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
         ),
-        dotData: FlDotData(show: false),
+        dotData: const FlDotData(show: false),
         gradient: LinearGradient(
           colors: TColor.primaryG,
         ),
@@ -146,7 +213,7 @@ class _HomeViewState extends State<HomeView> {
                           style: TextStyle(color: TColor.gray, fontSize: 12),
                         ),
                         Text(
-                          userName,
+                          userProfile.name!,
                           style: TextStyle(
                               color: TColor.black,
                               fontSize: 20,
@@ -154,6 +221,15 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ],
                     ),
+                    IconButton(onPressed: () async{
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      prefs.remove('userProfile');
+                      prefs.remove('isLoggedIn');
+                      await Navigator.pushReplacementNamed(context, '/login');
+                    },
+                      icon:
+                      Icon(Icons.logout),),
+
                     IconButton(
                         onPressed: () {
                           Navigator.push(
@@ -175,9 +251,9 @@ class _HomeViewState extends State<HomeView> {
                   height: media.width * 0.05,
                 ),
                 Container(
-                  height: media.width * 0.4,
+                  height: media.width * 0.42,
                   decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: TColor.primaryG),
+                      gradient: LinearGradient(colors: TColor.primaryG2),
                       borderRadius: BorderRadius.circular(media.width * 0.075)),
                   child: Stack(alignment: Alignment.center, children: [
                     Image.asset(
@@ -188,7 +264,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 25, horizontal: 25),
+                          vertical: 0, horizontal: 25),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -197,14 +273,14 @@ class _HomeViewState extends State<HomeView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "BMI (Body Mass Index)",
+                                "Steps Count",
                                 style: TextStyle(
                                     color: TColor.white,
-                                    fontSize: 14,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.w700),
                               ),
                               Text(
-                                "You have a normal weight",
+                                "Keep going",
                                 style: TextStyle(
                                     color: TColor.white.withOpacity(0.7),
                                     fontSize: 12),
@@ -223,23 +299,23 @@ class _HomeViewState extends State<HomeView> {
                                       onPressed: () {}))
                             ],
                           ),
-                          AspectRatio(
-                            aspectRatio: 1,
-                            child: PieChart(
-                              PieChartData(
-                                pieTouchData: PieTouchData(
-                                  touchCallback:
-                                      (FlTouchEvent event, pieTouchResponse) {},
-                                ),
-                                startDegreeOffset: 250,
-                                borderData: FlBorderData(
-                                  show: false,
-                                ),
-                                sectionsSpace: 1,
-                                centerSpaceRadius: 0,
-                                sections: showingSections(),
-                              ),
+                          CircularPercentIndicator(
+                            radius: media.width*0.13,
+                            lineWidth: 13.0,
+                            animation: true,
+                            percent: 0.7,
+                            center: Text(
+                              "70.0%",
+                              style:
+                               TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
                             ),
+                            footer: Text(
+                              "9999 / 10000",
+                              style:
+                              TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                            circularStrokeCap: CircularStrokeCap.round,
+                            progressColor: Colors.purple.withOpacity(0.6),
                           ),
                         ],
                       ),
@@ -276,13 +352,13 @@ class _HomeViewState extends State<HomeView> {
                           fontWeight: FontWeight.w400,
                           onPressed: () {
                             print('clicked check');
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>
-                            //         const ActivityTrackerView(),
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const StepsDetectionService(),
+                              ),
+                            );
                           },
                         ),
                       )
@@ -393,7 +469,7 @@ class _HomeViewState extends State<HomeView> {
                                       List<int> spotIndexes) {
                                 return spotIndexes.map((index) {
                                   return TouchedSpotIndicatorData(
-                                    FlLine(
+                                    const FlLine(
                                       color: Colors.red,
                                     ),
                                     FlDotData(
@@ -431,10 +507,10 @@ class _HomeViewState extends State<HomeView> {
                             lineBarsData: lineBarsData,
                             minY: 0,
                             maxY: 130,
-                            titlesData: FlTitlesData(
+                            titlesData: const FlTitlesData(
                               show: false,
                             ),
-                            gridData: FlGridData(show: false),
+                            gridData: const FlGridData(show: false),
                             borderData: FlBorderData(
                               show: true,
                               border: Border.all(
@@ -867,7 +943,7 @@ class _HomeViewState extends State<HomeView> {
                               List<int> spotIndexes) {
                             return spotIndexes.map((index) {
                               return TouchedSpotIndicatorData(
-                                FlLine(
+                                const FlLine(
                                   color: Colors.transparent,
                                 ),
                                 FlDotData(
@@ -917,7 +993,7 @@ class _HomeViewState extends State<HomeView> {
                         gridData: FlGridData(
                           show: true,
                           drawHorizontalLine: true,
-                          horizontalInterval: 25,
+                          horizontalInterval: 20,
                           drawVerticalLine: false,
                           getDrawingHorizontalLine: (value) {
                             return FlLine(
@@ -1046,7 +1122,7 @@ class _HomeViewState extends State<HomeView> {
         ]),
         barWidth: 4,
         isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
+        dotData: const FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
         spots: const [
           FlSpot(1, 35),
@@ -1067,7 +1143,7 @@ class _HomeViewState extends State<HomeView> {
         ]),
         barWidth: 2,
         isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
+        dotData: const FlDotData(show: false),
         belowBarData: BarAreaData(
           show: false,
         ),
