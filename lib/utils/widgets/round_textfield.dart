@@ -6,7 +6,7 @@ class RoundTextField extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final String hitText;
-  final String icon;
+  final Widget icon;
   final Widget? rigtIcon;
   final bool obscureText;
   final EdgeInsets? margin;
@@ -46,13 +46,8 @@ class RoundTextField extends StatelessWidget {
                 alignment: Alignment.center,
                 width: 20,
                 height: 20,
-                child: Image.asset(
-                  icon,
-                  width: 20,
-                  height: 20,
-                  fit: BoxFit.contain,
-                  color: TColor.gray,
-                )),
+                child: icon,
+            ),
             hintStyle: TextStyle(color: TColor.gray, fontSize: 12)),
       ),
     );

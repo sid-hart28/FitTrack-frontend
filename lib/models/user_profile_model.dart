@@ -20,8 +20,8 @@ class UserProfile {
     this.userId,
     this.name,
     this.dob,
-    this.weight,
-    this.height,
+    this.weight=65,
+    this.height=175,
     this.creationTimestamp,
   });
 

@@ -7,7 +7,8 @@ import 'dart:convert';
 // 10.0.2.2:8080
 // 192.168.240.128
 class UserAuthService {
-  static const baseUrl = 'http://192.168.240.128:8080/api/auth/';
+  static const baseLocalUrl = 'http://192.168.240.128:8080/api/auth/';
+  static const baseUrl = 'https://fittrack-backend-8yd9.onrender.com/api/auth/';
 
   Future<LoginResponseModel?> registerUser(SignupRequestModel signupRequestModel) async{
     print("In UserAuth RegisterUser");

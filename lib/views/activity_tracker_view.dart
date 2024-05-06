@@ -236,7 +236,7 @@ class _ActivityTrackerViewState extends State<ActivityTrackerView> {
                 child: BarChart(BarChartData(
                   barTouchData: BarTouchData(
                     touchTooltipData: BarTouchTooltipData(
-                      tooltipBgColor: Colors.grey,
+                      // tooltipBgColor: Colors.grey,
                       tooltipHorizontalAlignment: FLHorizontalAlignment.right,
                       tooltipMargin: 10,
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
