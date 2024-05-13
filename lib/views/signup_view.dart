@@ -1,10 +1,7 @@
-import 'package:fit_track/models/login_response_model.dart';
 import 'package:fit_track/models/signup_request_model.dart';
 import 'package:fit_track/models/user_profile_model.dart';
-import 'package:fit_track/services/helper_functions.dart';
 import 'package:fit_track/services/user_auth_service.dart';
 import 'package:fit_track/utils/utils.dart';
-import 'package:fit_track/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -125,7 +122,7 @@ class _SignUpViewState extends State<SignUpView> {
                       },
                       controller: nameEditingController,
                       hitText: "Full Name",
-                      icon: Icon(Icons.person_2_outlined),
+                      icon: const Icon(Icons.person_2_outlined),
                     ),
                     SizedBox(
                       height: media.width * 0.04,
@@ -133,7 +130,7 @@ class _SignUpViewState extends State<SignUpView> {
                     RoundTextField(
                       controller: emailEditingController,
                       hitText: "Email",
-                      icon: Icon(Icons.email_outlined),
+                      icon: const Icon(Icons.email_outlined),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -157,7 +154,7 @@ class _SignUpViewState extends State<SignUpView> {
                         return null;
                       },
                       hitText: "Password",
-                      icon: Icon(Icons.lock_outline_rounded),
+                      icon: const Icon(Icons.lock_outline_rounded),
                       obscureText: !showPassword,
                       rigtIcon: TextButton(
                         onPressed: () {
@@ -204,7 +201,7 @@ class _SignUpViewState extends State<SignUpView> {
                         return null;
                       },
                       hitText: "Weight (kg)",
-                      icon:  Icon(Icons.monitor_weight_outlined),
+                      icon: const Icon(Icons.monitor_weight_outlined),
                     ),
                     SizedBox(
                       height: media.width * 0.04,
@@ -223,7 +220,7 @@ class _SignUpViewState extends State<SignUpView> {
                         return null;
                       },
                       hitText: "Height (cm)",
-                      icon:  Icon(Icons.height),
+                      icon: const Icon(Icons.height),
                     ),
                     SizedBox(
                       height: media.width * 0.3,
@@ -308,23 +305,19 @@ class _SignUpViewState extends State<SignUpView> {
   }
 }
 
-void showSnackBar(BuildContext context, String message) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      dismissDirection: DismissDirection.up,
-      behavior: SnackBarBehavior.floating,
-      // margin: EdgeInsets.only(
-      //     bottom: MediaQuery.of(context).size.width * 1.91,
-      //     left: 20,
-      //     right: 20),
-      duration: const Duration(seconds: 1),
-      backgroundColor: Colors.redAccent,
-      content: Text(
-        message,
-        style: const TextStyle(
-          fontSize: 18,
-        ),
-      ),
-    ),
-  );
-}
+// void showSnackBar(BuildContext context, String message) {
+//   ScaffoldMessenger.of(context).showSnackBar(
+//     SnackBar(
+//       dismissDirection: DismissDirection.up,
+//       behavior: SnackBarBehavior.floating,
+//       duration: const Duration(seconds: 1),
+//       backgroundColor: Colors.redAccent,
+//       content: Text(
+//         message,
+//         style: const TextStyle(
+//           fontSize: 18,
+//         ),
+//       ),
+//     ),
+//   );
+// }

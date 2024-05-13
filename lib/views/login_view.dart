@@ -1,18 +1,12 @@
-// import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:fit_track/models/login_request_model.dart';
 import 'package:fit_track/models/user_profile_model.dart';
-import 'package:fit_track/services/alarm_service.dart';
-import 'package:fit_track/services/helper_functions.dart';
-import 'package:fit_track/services/sd_service.dart';
 import 'package:fit_track/services/user_auth_service.dart';
-import 'package:fit_track/views/testing_view.dart';
+import 'package:fit_track/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-// import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fit_track/services/background_service.dart';
+// import 'package:fit_track/services/background_service.dart';
 
 import '../utils/colors.dart';
 import '../utils/widgets/round_button.dart';
@@ -130,42 +124,6 @@ class _LoginViewState extends State<LoginView> {
                           fontSize: 20,
                           fontWeight: FontWeight.w700),
                     ),
-                    // ElevatedButton(onPressed: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(builder: (context) => const TestingView()),
-                    //   );
-                    // },
-                    //
-                    //   child: const Text('Click'),),
-                    //     ElevatedButton(onPressed: () {
-                    //       FlutterBackgroundService().invoke('setAsForeground');
-                    //     },
-                    //       child: const Text('Start Foreground'),),
-                    //     ElevatedButton(onPressed: () {
-                    //       FlutterBackgroundService().invoke('setAsBackground');
-                    //     },
-                    //       child: const Text('Start Background'),),
-                    // ElevatedButton(
-                    //   child: Text(text),
-                    //   onPressed: () async {
-                    //     final service = FlutterBackgroundService();
-                    //     var isRunning = await service.isRunning();
-                    //     if (isRunning) {
-                    //       service.invoke("stopService");
-                    //     } else {
-                    //       service.startService();
-                    //     }
-                    //
-                    //     if (!isRunning) {
-                    //       text = 'Stop Service';
-                    //     } else {
-                    //       text = 'Start Service';
-                    //     }
-                    //     setState(() {});
-                    //   },
-                    // ),
-                    //
                     SizedBox(
                       height: media.width * 0.05,
                     ),
@@ -175,7 +133,7 @@ class _LoginViewState extends State<LoginView> {
                     RoundTextField(
                       controller: txtEmail,
                       hitText: "Email",
-                      icon: Icon(Icons.email_outlined),
+                      icon: const Icon(Icons.email_outlined),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -198,7 +156,7 @@ class _LoginViewState extends State<LoginView> {
                       },
                       controller: txtPassword,
                       hitText: "Password",
-                      icon: Icon(Icons.lock_outline_rounded),
+                      icon: const Icon(Icons.lock_outline_rounded),
                       obscureText: !showPassword,
                       rigtIcon: TextButton(
                         onPressed: () {
@@ -223,21 +181,6 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     Padding(
-                    //       padding: const EdgeInsets.only(top: 15),
-                    //       child: Text(
-                    //         "Forgot your password?",
-                    //         style: TextStyle(
-                    //             color: TColor.secondaryColor2,
-                    //             fontSize: 12,
-                    //             decoration: TextDecoration.underline),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                     const Spacer(),
                     RoundButton(
                       title: "Login",
@@ -278,57 +221,6 @@ class _LoginViewState extends State<LoginView> {
                     SizedBox(
                       height: media.width * 0.04,
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     GestureDetector(
-                    //       onTap: () {},
-                    //       child: Container(
-                    //         width: 50,
-                    //         height: 50,
-                    //         alignment: Alignment.center,
-                    //         decoration: BoxDecoration(
-                    //           color: TColor.white,
-                    //           border: Border.all(
-                    //             width: 1,
-                    //             color: TColor.gray.withOpacity(0.4),
-                    //           ),
-                    //           borderRadius: BorderRadius.circular(15),
-                    //         ),
-                    //         child: Image.asset(
-                    //           "assets/img/google.png",
-                    //           width: 20,
-                    //           height: 20,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     SizedBox(
-                    //       width: media.width * 0.04,
-                    //     ),
-                    //     GestureDetector(
-                    //       onTap: () {},
-                    //       child: Container(
-                    //         width: 50,
-                    //         height: 50,
-                    //         alignment: Alignment.center,
-                    //         decoration: BoxDecoration(
-                    //           color: TColor.white,
-                    //           border: Border.all(
-                    //             width: 1,
-                    //             color: TColor.gray.withOpacity(0.4),
-                    //           ),
-                    //           borderRadius: BorderRadius.circular(15),
-                    //         ),
-                    //         child: Image.asset(
-                    //           "assets/img/facebook.png",
-                    //           width: 20,
-                    //           height: 20,
-                    //         ),
-                    //       ),
-                    //     )
-                    //   ],
-                    // ),
-                    //
                     SizedBox(
                       height: media.width * 0.04,
                     ),

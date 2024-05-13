@@ -1,18 +1,14 @@
-import 'dart:math';
 import 'dart:ui';
 
-import 'package:dotted_dashed_line/dotted_dashed_line.dart';
 import 'package:fit_track/models/user_health_history_model.dart';
 import 'package:fit_track/models/user_profile_model.dart';
 import 'package:fit_track/models/walking_history_model.dart';
-import 'package:fit_track/services/helper_functions.dart';
-import 'package:fit_track/services/shared_pref_service.dart';
-import 'package:fit_track/services/step_detection_service.dart';
-import 'package:fit_track/services/step_detection_service.dart';
+import 'package:fit_track/utils/helper_functions.dart';
 import 'package:fit_track/services/step_service.dart';
+import 'package:fit_track/utils/utils.dart';
+import 'package:fit_track/utils/widgets/bmi_card.dart';
+import 'package:fit_track/utils/widgets/count_card.dart';
 import 'package:fit_track/views/daily_activity_view.dart';
-import 'package:fit_track/views/testing2.dart';
-import 'package:fit_track/views/testing_view.dart';
 import 'package:fit_track/views/walking_tracker_view.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,13 +19,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_animation_progress_bar/simple_animation_progress_bar.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'dart:async';
-import 'package:pedometer/pedometer.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../../utils/colors.dart';
 import '../../utils/widgets/round_button.dart';
 import '../../utils/widgets/workout_row.dart';
-import 'activity_tracker_view.dart';
 import 'finished_workout_view.dart';
 import 'notification_view.dart';
 
@@ -82,10 +75,7 @@ class _HomeViewState extends State<HomeView> {
       });
     }
   }
-  FutureOr onGoBack(dynamic value) {
-    _loadWalkingHistory();
-    setState(() {});
-  }
+
 
   Future<void> _addWaterIntake(double waterAmount) async {
     setState(() {
@@ -133,7 +123,6 @@ class _HomeViewState extends State<HomeView> {
     double calories = userHealthHistory?.todayCalorie ?? 0.0;
     double height = userProfile.height ?? 175;
     double weight = userProfile.weight ?? 65;
-    double bmi = calculateBMI(weight, height);
     double distance = calculateDistance(height, steps);
 
     final lineBarsData = [
@@ -183,7 +172,6 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
     ];
-
 
 
     final tooltipsOnBar = lineBarsData[0];
@@ -313,7 +301,7 @@ class _HomeViewState extends State<HomeView> {
                             center: ShaderMask(
                               blendMode: BlendMode.srcIn,
                               shaderCallback: (bounds) {
-                                return LinearGradient(
+                                return const LinearGradient(
                                     colors: [Colors.blueAccent, Colors.black87],
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter)
@@ -323,13 +311,13 @@ class _HomeViewState extends State<HomeView> {
                               child: Text(
                                 "${(calculatePercent(steps, 5000) * 100).toStringAsFixed(1)}%",
                                 style:
-                                TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                                const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
                               ),
                             ),
                             footer: Text(
                               "$steps / 5000",
                               style:
-                              TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                             const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                             ),
                             circularStrokeCap: CircularStrokeCap.round,
                             progressColor:TColor.secondaryColor1,
@@ -397,44 +385,6 @@ class _HomeViewState extends State<HomeView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) =>
-                                  // DailyActivityView(stepCountDaily:
-                                  // [
-                                  //   Daily(
-                                  //     activityCount: "10000",
-                                  //     timestamp: DateTime.now().subtract(Duration(days: 3)),
-                                  //   ),
-                                  //   Daily(
-                                  //     activityCount: "1200",
-                                  //     timestamp: DateTime.now().subtract(Duration(days: 2)),
-                                  //   ),
-                                  //   Daily(
-                                  //     activityCount: "1400",
-                                  //     timestamp: DateTime.now().subtract(Duration(days: 1)),
-                                  //   ),
-                                  //   Daily(
-                                  //     activityCount: "1600",
-                                  //     timestamp: DateTime.now(),
-                                  //   ),
-                                  // ],
-                                  //   walkTimeDaily: [
-                                  //     Daily(
-                                  //       activityCount: "20",
-                                  //       timestamp: DateTime.now().subtract(Duration(days: 3)),
-                                  //     ),
-                                  //     Daily(
-                                  //       activityCount: "30",
-                                  //       timestamp: DateTime.now().subtract(Duration(days: 2)),
-                                  //     ),
-                                  //     Daily(
-                                  //       activityCount: "25",
-                                  //       timestamp: DateTime.now().subtract(Duration(days: 1)),
-                                  //     ),
-                                  //     Daily(
-                                  //       activityCount: "35",
-                                  //       timestamp: DateTime.now(),
-                                  //     ),
-                                  //   ],
-                                  // ),
                                DailyActivityView(
                                     stepCountDaily: userHealthHistory?.stepCountDaily??[],
                                     walkTimeDaily: userHealthHistory?.walkTimeDaily??[],
@@ -479,7 +429,7 @@ class _HomeViewState extends State<HomeView> {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 "Walking History",
                                 style: TextStyle(
                                     color: Colors.black,
@@ -489,7 +439,7 @@ class _HomeViewState extends State<HomeView> {
                               ShaderMask(
                                 blendMode: BlendMode.srcIn,
                                 shaderCallback: (bounds) {
-                                  return LinearGradient(
+                                  return const LinearGradient(
                                       colors: [Colors.black87, Colors.lightBlue],
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter)
@@ -498,7 +448,7 @@ class _HomeViewState extends State<HomeView> {
                                 },
                                 child: Text(
                                   "$selectedSteps steps",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w700,
                                       fontSize: 18),
@@ -698,123 +648,68 @@ class _HomeViewState extends State<HomeView> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Container(
-                            width: double.maxFinite,
-                            height: media.width * 0.4,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 25, horizontal: 20),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(25),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.black12, blurRadius: 2)
-                                ]),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Sleep",
-                                    style: TextStyle(
-                                        color: TColor.black,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                  ShaderMask(
-                                    blendMode: BlendMode.srcIn,
-                                    shaderCallback: (bounds) {
-                                      return LinearGradient(
-                                          colors: TColor.primaryG,
-                                          begin: Alignment.centerLeft,
-                                          end: Alignment.centerRight)
-                                          .createShader(Rect.fromLTRB(0, 0,
-                                          bounds.width, bounds.height));
-                                    },
-                                    child: Text(
-                                      "8h 20m",
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.push(context,
+                                MaterialPageRoute(builder: (context)=>
+                                const  FinishedWorkoutView(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: double.maxFinite,
+                              height: media.width * 0.4,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 25, horizontal: 20),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(25),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.black12, blurRadius: 2)
+                                  ]),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Sleep",
                                       style: TextStyle(
-                                          color: TColor.white.withOpacity(0.7),
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 14),
+                                          color: TColor.black,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700),
                                     ),
-                                  ),
-                                  // const Spacer(),
-                                  Expanded(
-                                    child: Image.asset(
-                                        "assets/img/sleep_grap.png",
-                                        width: double.maxFinite,
-                                        fit: BoxFit.fitWidth),
-                                  )
-                                ]),
+                                    ShaderMask(
+                                      blendMode: BlendMode.srcIn,
+                                      shaderCallback: (bounds) {
+                                        return LinearGradient(
+                                            colors: TColor.primaryG,
+                                            begin: Alignment.centerLeft,
+                                            end: Alignment.centerRight)
+                                            .createShader(Rect.fromLTRB(0, 0,
+                                            bounds.width, bounds.height));
+                                      },
+                                      child: Text(
+                                        "8h 20m",
+                                        style: TextStyle(
+                                            color: TColor.white.withOpacity(0.7),
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14),
+                                      ),
+                                    ),
+                                    // const Spacer(),
+                                    Expanded(
+                                      child: Image.asset(
+                                          "assets/img/sleep_grap.png",
+                                          width: double.maxFinite,
+                                          fit: BoxFit.fitWidth),
+                                    )
+                                  ]),
+                            ),
                           ),
                           SizedBox(
                             height: media.width * 0.05,
                           ),
-                          Container(
-                            width: double.maxFinite,
-                            height: media.width * 0.5,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(25),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.black12, blurRadius: 2)
-                                ]),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ShaderMask(
-                                  blendMode: BlendMode.srcIn,
-                                  shaderCallback: (bounds) {
-                                    return LinearGradient(
-                                        colors: TColor.primaryG,
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight)
-                                        .createShader(Rect.fromLTRB(
-                                        0, 0, bounds.width, bounds.height));
-                                  },
-                                  child: Text(
-                                    "BMI",
-                                    style: TextStyle(
-                                        color: TColor.white.withOpacity(0.9),
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 18),
-                                  ),
-                                ),
-                                const Spacer(),
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    width: media.width * 0.3,
-                                    height: media.width * 0.3,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                          colors: TColor.primaryG),
-                                      borderRadius: BorderRadius.circular(
-                                          media.width * 0.075),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(bmi.toStringAsFixed(2),
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),),
-                                        Icon( isPerfectWeight(bmi)?
-                                        Icons.check_circle_rounded:
-                                        Icons.warning_amber,
-                                          size: 40,),
-                                        Text(getBMICategory(bmi))
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
+                          BMICard(screenWidth: media.width, bmi: calculateBMI(weight, height)),
                         ],
                       ),
                     ),
@@ -874,350 +769,6 @@ class _HomeViewState extends State<HomeView> {
       ),
     );
   }
-
-  List<PieChartSectionData> showingSections() {
-    return List.generate(
-      2,
-          (i) {
-        var color0 = TColor.secondaryColor1;
-
-        switch (i) {
-          case 0:
-            return PieChartSectionData(
-                color: color0,
-                value: 33,
-                title: '',
-                radius: 55,
-                titlePositionPercentageOffset: 0.55,
-                badgeWidget: const Text(
-                  "20,1",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700),
-                ));
-          case 1:
-            return PieChartSectionData(
-              color: Colors.white,
-              value: 75,
-              title: '',
-              radius: 45,
-              titlePositionPercentageOffset: 0.55,
-            );
-
-          default:
-            throw Error();
-        }
-      },
-    );
-  }
-}
-
-class CountCard extends StatefulWidget {
-  final double screenWidth;
-  final String title;
-  final String subTitle;
-  final String inTitle;
-  final double value;
-  const CountCard({super.key,required this.screenWidth,
-    required this.title,
-    required this.subTitle,
-    required this.inTitle,
-    required this.value});
-
-  @override
-  State<CountCard> createState() => _CountCardState();
-}
-
-class _CountCardState extends State<CountCard> {
-  late ValueNotifier<double> _progressNotifier;
-
-@override
-void initState() {
-  super.initState();
-  _progressNotifier = ValueNotifier(widget.value);
-}
-  @override
-  void didUpdateWidget(covariant CountCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.value != oldWidget.value) {
-      _progressNotifier.value = widget.value;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var screenWidth = widget.screenWidth;
-    return Container(
-      width: double.maxFinite,
-      height: screenWidth * 0.5,
-      padding: const EdgeInsets.symmetric(
-          vertical: 25, horizontal: 20),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(25),
-          boxShadow: const [
-            BoxShadow(
-                color: Colors.black12, blurRadius: 2)
-          ]),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.title,
-            style: TextStyle(
-                color: TColor.black,
-                fontSize: 14,
-                fontWeight: FontWeight.w700),
-          ),
-          ShaderMask(
-            blendMode: BlendMode.srcIn,
-            shaderCallback: (bounds) {
-              return LinearGradient(
-                  colors: TColor.primaryG,
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight)
-                  .createShader(Rect.fromLTRB(
-                  0, 0, bounds.width, bounds.height));
-            },
-            child: Text(
-              widget.subTitle,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18),
-            ),
-          ),
-          const Spacer(),
-          Container(
-            alignment: Alignment.center,
-            child: SizedBox(
-              width: screenWidth * 0.21,
-              height: screenWidth * 0.21,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: screenWidth * 0.16,
-                    height: screenWidth * 0.16,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: TColor.primaryG),
-                      borderRadius: BorderRadius.circular(
-                          screenWidth * 0.075),
-                    ),
-                    child: FittedBox(
-                      child: Text(
-                        widget.inTitle,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: TColor.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 10),
-                      ),
-                    ),
-                  ),
-                  SimpleCircularProgressBar(
-                    progressStrokeWidth: 10,
-                    backStrokeWidth: 10,
-                    progressColors: TColor.primaryG,
-                    backColor: Colors.grey.shade100,
-                    valueNotifier: _progressNotifier,
-                    startAngle: 0,
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-
-// class CountCard extends StatelessWidget {
-//   const CountCard({
-//     super.key,
-//     required this.screenWidth,
-//     required this.title,
-//     required this.subTitle,
-//     required this.inTitle,
-//     required this.value,
-//   });
-//
-//   final double screenWidth;
-//   final String title;
-//   final String subTitle;
-//   final String inTitle;
-//   final double value;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: double.maxFinite,
-//       height: screenWidth * 0.5,
-//       padding: const EdgeInsets.symmetric(
-//           vertical: 25, horizontal: 20),
-//       decoration: BoxDecoration(
-//           color: Colors.white,
-//           borderRadius: BorderRadius.circular(25),
-//           boxShadow: const [
-//             BoxShadow(
-//                 color: Colors.black12, blurRadius: 2)
-//           ]),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Text(
-//             title,
-//             style: TextStyle(
-//                 color: TColor.black,
-//                 fontSize: 14,
-//                 fontWeight: FontWeight.w700),
-//           ),
-//           ShaderMask(
-//             blendMode: BlendMode.srcIn,
-//             shaderCallback: (bounds) {
-//               return LinearGradient(
-//                   colors: TColor.primaryG,
-//                   begin: Alignment.centerLeft,
-//                   end: Alignment.centerRight)
-//                   .createShader(Rect.fromLTRB(
-//                   0, 0, bounds.width, bounds.height));
-//             },
-//             child: Text(
-//               subTitle,
-//               style: TextStyle(
-//                   color: Colors.white.withOpacity(0.7),
-//                   fontWeight: FontWeight.w700,
-//                   fontSize: 18),
-//             ),
-//           ),
-//           const Spacer(),
-//           Container(
-//             alignment: Alignment.center,
-//             child: SizedBox(
-//               width: screenWidth * 0.21,
-//               height: screenWidth * 0.21,
-//               child: Stack(
-//                 alignment: Alignment.center,
-//                 children: [
-//                   Container(
-//                     width: screenWidth * 0.16,
-//                     height: screenWidth * 0.16,
-//                     alignment: Alignment.center,
-//                     decoration: BoxDecoration(
-//                       gradient: LinearGradient(
-//                           colors: TColor.primaryG),
-//                       borderRadius: BorderRadius.circular(
-//                           screenWidth * 0.075),
-//                     ),
-//                     child: FittedBox(
-//                       child: Text(
-//                         inTitle,
-//                         textAlign: TextAlign.center,
-//                         style: TextStyle(
-//                             color: TColor.white,
-//                             fontWeight: FontWeight.w600,
-//                             fontSize: 10),
-//                       ),
-//                     ),
-//                   ),
-//                   SimpleCircularProgressBar(
-//                     progressStrokeWidth: 10,
-//                     backStrokeWidth: 10,
-//                     progressColors: TColor.primaryG,
-//                     backColor: Colors.grey.shade100,
-//                     valueNotifier: ValueNotifier(value),
-//                     startAngle: 0,
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-
-String getCaloriesInTitle(double cal){
-  if(cal>=130.0){
-    return "${cal.toStringAsFixed(1)} kCal\ndone";
-  }
-  else{
-    return "${(130-cal).toStringAsFixed(1)} kCal\n left";
-  }
-}
-
-double getCaloriesValue(double calories){
-  if(calories>=130) {
-    return 100;
-  }
-  else{
-    return (calories*100)/130.0;
-  }
-}
-
-String getDistanceInTitle(double distance){
-  if(distance>=2.0){
-    return "${distance.toStringAsFixed(2)} km\ndone";
-  }
-  else{
-    return "${(2.0-distance).toStringAsFixed(2)} km\n left";
-  }
-}
-
-double getDistanceValue(double distance){
-  if(distance>=2.0) {
-    return 100;
-  }
-  else{
-    return (distance*100)/2.0;
-  }
-}
-
-double calculateBMI(double weightKg, double heightCm) {
-  double heightM = heightCm / 100;
-  double bmi = weightKg / (heightM * heightM);
-  return bmi;
-}
-
-bool isPerfectWeight(double bmi) {
-  return bmi >= 18.5 && bmi <= 24.9;
-}
-
-String getBMICategory(double bmi) {
-  if (bmi < 18.5) {
-    return 'Lower Weight';
-  } else if (bmi >= 18.5 && bmi <= 24.9) {
-    return 'Healthy Weight';
-  } else if (bmi >= 25 && bmi <= 29.9) {
-    return 'Overweight';
-  } else {
-    return 'Obese';
-  }
-}
-
-double getWaterRatio(double waterIntake){
-  if(waterIntake>5) {
-    return 1.0;
-  }
-  return waterIntake/5.0;
-}
-
-double calculatePercent(int a, int b) {
-  if (b == 0) {
-    return 0.0;
-  }
-  if(a >= b){
-    return 1.0;
-  }
-  double d = a/b;
-  return d;
 }
 
 double getMaxY(){
@@ -1234,31 +785,3 @@ double getMaxY(){
   return ms *1.25;
 }
 
-
-String formatDate(DateTime d) {
-  return d.toString().substring(0, 19);
-}
-
-List lastWorkoutArr = [
-  {
-    "name": "Full Body Workout",
-    "image": "assets/img/Workout1.png",
-    "kcal": "180",
-    "time": "20",
-    "progress": 0.3
-  },
-  {
-    "name": "Lower Body Workout",
-    "image": "assets/img/Workout2.png",
-    "kcal": "200",
-    "time": "30",
-    "progress": 0.4
-  },
-  {
-    "name": "Ab Workout",
-    "image": "assets/img/Workout3.png",
-    "kcal": "300",
-    "time": "40",
-    "progress": 0.7
-  },
-];

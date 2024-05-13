@@ -1,10 +1,6 @@
 import 'user_profile_model.dart';
 import 'dart:convert';
 
-// To parse this JSON data, do
-//
-//     final loginResponseModel = loginResponseModelFromJson(jsonString);
-
 
 LoginResponseModel loginResponseModelFromJson(String str) => LoginResponseModel.fromJson(json.decode(str));
 

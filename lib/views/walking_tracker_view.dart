@@ -1,7 +1,8 @@
 import 'package:fit_track/models/user_health_data_model.dart';
 import 'package:fit_track/models/user_profile_model.dart';
-import 'package:fit_track/services/helper_functions.dart';
+import 'package:fit_track/utils/helper_functions.dart';
 import 'package:fit_track/services/shared_pref_service.dart';
+import 'package:fit_track/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:pedometer/pedometer.dart';
@@ -49,13 +50,6 @@ class _WalkingTrackerViewState extends State<WalkingTrackerView>
       });
     });
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   userProfile = ModalRoute.of(context)!.settings.arguments as UserProfile?;
-  //   print(userProfile?.name);
-  // }
 
   void startTimer() {
     _startTime = DateTime.now();

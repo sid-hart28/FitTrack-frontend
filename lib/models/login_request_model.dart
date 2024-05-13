@@ -1,9 +1,5 @@
 import 'dart:convert';
 
-// To parse this JSON data, do
-//
-//     final loginRequestModel = loginRequestModelFromJson(jsonString);
-
 LoginRequestModel loginRequestModelFromJson(String str) => LoginRequestModel.fromJson(json.decode(str));
 
 String loginRequestModelToJson(LoginRequestModel data) => json.encode(data.toJson());

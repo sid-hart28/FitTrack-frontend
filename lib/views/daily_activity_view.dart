@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
-import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:intl/intl.dart'; // For date formatting
+import 'package:intl/intl.dart';
 import 'package:fit_track/models/user_health_history_model.dart';
 
 class DailyActivityView extends StatelessWidget {
@@ -108,11 +104,11 @@ class DailyActivityView extends StatelessWidget {
                   },
                 ),
               ),
-              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              rightTitles: AxisTitles(
+              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false)),
             ),
-            gridData: FlGridData(show: true),
+            gridData: const FlGridData(show: true),
             borderData: FlBorderData(show: false),
           ),
         ),

@@ -7,8 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 class SplashView extends StatefulWidget {
+  const SplashView({super.key});
+
   @override
-  _SplashViewState createState() => _SplashViewState();
+  State<SplashView> createState() => _SplashViewState();
 }
 
 UserProfile? userProfile;
@@ -74,8 +76,6 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void navigationHomePage() {
-    // final prefs = await SharedPreferences.getInstance();
-    // String? userPref = prefs.getString('userProfile');
     print("Hello for SplashView Screen Home Page Navigation");
     Navigator.pushReplacementNamed(context, '/home', arguments: userProfile);
   }
